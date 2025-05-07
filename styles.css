@@ -1,0 +1,127 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; /* Ensure full height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* Game Page Styles */
+#gameScreen {
+    display: none;
+    width: 100%;
+    height: 100vh; /* Ensures the game page takes full viewport height */
+    background-image: url('c3.png'); /* Replace with your actual image path */
+    background-size: cover; /* Ensures the image fully covers the screen */
+    background-position: center; /* Ensures the image is centered */
+    background-repeat: no-repeat; /* Prevents repeating of the image */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Question */
+#question {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+/* Options Container */
+#optionsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    gap: 15px;
+}
+
+/* Option Buttons */
+#optionsContainer button {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    min-height: 80px;
+    font-size: 24px;
+    background: #1d4ed8;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.3s;
+}
+
+#optionsContainer button:hover {
+    background: #2563eb;
+}
+
+/* Scoreboard */
+#scoreboard {
+    list-style: none;
+    padding: 0;
+}
+
+#scoreboard li {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+/* Media Queries for Smaller Screens */
+@media (max-width: 768px) {
+    /* Adjust button and input sizes for smaller screens */
+    button {
+        font-size: 16px;
+        padding: 12px 24px;
+    }
+
+    input {
+        width: 90%;
+        font-size: 14px;
+    }
+
+    /* Options Container */
+    #optionsContainer button {
+        font-size: 20px;
+        padding: 15px;
+    }
+
+    /* Container */
+    .container {
+        width: 95%;
+        margin: 20px auto;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Adjust button and input sizes for mobile screens */
+    button {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+
+    input {
+        width: 90%;
+        font-size: 12px;
+    }
+
+    /* Options Container */
+    #optionsContainer button {
+        font-size: 18px;
+        padding: 12px;
+    }
+}

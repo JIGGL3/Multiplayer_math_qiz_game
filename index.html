@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Game</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+    .screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background-size: cover;
+      background-position: center;
+    }
+    #loginScreen { background-image: url('c2.png'); }
+    #modeScreen { background-image: url('c1.png'); display: none; }
+    #gameScreen { background-image: url('c3.png'); display: none; }
+    #resultScreen { background-image: url('c3.png'); display: none; }
+    .content-box {
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+    }
+    #optionsContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    #optionsContainer button {
+      padding: 15px;
+      border-radius: 8px;
+      background: #1d4ed8;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 18px;
+    }
+    #optionsContainer button:hover { background: #2563eb; }
+    .correct { background: #10b981 !important; }
+    .incorrect { background: #ef4444 !important; }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+    .shake { animation: shake 0.5s ease-in-out; }
+    input {
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      color: black;
+      width: 100%;
+      max-width: 300px;
+    }
+    button { transition: all 0.3s; }
+    .leaderboard {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+    .leaderboard h4 {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .leaderboard ul {
+      list-style: none;
+      padding: 0;
+    }
+    .leaderboard li {
+      padding: 3px 0;
+    }
+    .highlight-player {
+      font-weight: bold;
+      color: #fbbf24;
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="loginScreen" class="screen">
+    <div class="content-box">
+      <h1 class="text-3xl font-bold mb-6 text-yellow-400">Math Game</h1>
+      <div class="flex gap-2 justify-center">
+        <input id="nameInput" placeholder="Your name">
+        <button id="nextBtn" class="bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mode Selection Screen -->
+  <div id="modeScreen" class="screen">
+    <div class="content-box">
+      <h2 class="text-2xl font-bold mb-6">Choose Mode</h2>
+      <div class="flex flex-col gap-3 mb-6">
+        <button onclick="selectMode('Champion')" class="bg-green-500 hover:bg-green-700 p-3 rounded">Champion</button>
+        <button onclick="showTimeInput()" class="bg-yellow-500 hover:bg-yellow-700 p-3 rounded">Rapid Fire</button>
+        <button onclick="showQuestionInput()" class="bg-purple-500 hover:bg-purple-700 p-3 rounded">Fast Finisher</button>
+      </div>
+
+      <div id="timeInput" class="hidden">
+        <div class="flex gap-2 justify-center mb-4">
+          <input id="timeLimit" type="number" placeholder="Seconds" min="1">
+          <button onclick="selectMode('Rapid Fire')" class="bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded">Start</button>
+        </div>
+      </div>
+
+      <div id="questionInput" class="hidden">
+        <div class="flex gap-2 justify-center mb-4">
+          <input id="questionCount" type="number" placeholder="Number of Questions" min="1">
+          <button onclick="selectMode('Fast Finisher')" class="bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded">Start</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="gameScreen" class="screen">
+    <div class="content-box">
+      <h2 id="gameHeader" class="text-2xl font-bold mb-2"></h2>
+      <div id="questionText" class="text-xl mb-6"></div>
+      <div id="optionsContainer"></div>
+      <div class="my-4 text-lg">Score: <span id="score" class="font-bold">0</span></div>
+      
+      <!-- Leaderboard Container -->
+      <div id="leaderboardContainer" class="mt-6 hidden">
+        <h3 class="text-xl font-bold mb-2">Leaderboards</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div id="championLeaderboard" class="bg-blue-900 p-4 rounded">
+            <h4 class="font-bold mb-2">🏆 Champion</h4>
+            <ul id="championPlayers"></ul>
+          </div>
+          <div id="rapidFireLeaderboard" class="bg-yellow-900 p-4 rounded">
+            <h4 class="font-bold mb-2">⏱ Rapid Fire</h4>
+            <ul id="rapidFirePlayers"></ul>
+          </div>
+          <div id="fastFinisherLeaderboard" class="bg-purple-900 p-4 rounded">
+            <h4 class="font-bold mb-2">🚀 Fast Finisher</h4>
+            <ul id="fastFinisherPlayers"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="resultScreen" class="screen">
+    <div class="content-box">
+      <h2 class="text-2xl font-bold mb-4">🎉 Game Over 🎉</h2>
+      <p id="resultText" class="text-xl mb-6"></p>
+      <button onclick="goToModeSelect()" class="mt-4 bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded">Play Again</button>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    let playerName = "";
+    let currentMode = "";
+    let currentCorrectAnswer = "";
+    let totalQuestions = 0;
+    let answeredQuestions = 0;
+
+    // DOM Elements
+    const elements = {
+      loginScreen: document.getElementById('loginScreen'),
+      modeScreen: document.getElementById('modeScreen'),
+      gameScreen: document.getElementById('gameScreen'),
+      resultScreen: document.getElementById('resultScreen'),
+      nameInput: document.getElementById('nameInput'),
+      nextBtn: document.getElementById('nextBtn'),
+      timeInput: document.getElementById('timeInput'),
+      questionInput: document.getElementById('questionInput'),
+      timeLimit: document.getElementById('timeLimit'),
+      questionCount: document.getElementById('questionCount'),
+      gameHeader: document.getElementById('gameHeader'),
+      questionText: document.getElementById('questionText'),
+      optionsContainer: document.getElementById('optionsContainer'),
+      score: document.getElementById('score'),
+      leaderboardContainer: document.getElementById('leaderboardContainer'),
+      championPlayers: document.getElementById('championPlayers'),
+      rapidFirePlayers: document.getElementById('rapidFirePlayers'),
+      fastFinisherPlayers: document.getElementById('fastFinisherPlayers'),
+      resultText: document.getElementById('resultText')
+    };
+
+    // Event Listeners
+    elements.nextBtn.addEventListener('click', goToModeSelect);
+    elements.nameInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') goToModeSelect();
+    });
+
+    function goToModeSelect() {
+      elements.resultScreen.style.display = 'none';
+      elements.loginScreen.style.display = 'none';
+      elements.modeScreen.style.display = 'flex';
+      elements.timeInput.classList.add('hidden');
+      elements.questionInput.classList.add('hidden');
+      elements.timeLimit.value = '';
+      elements.questionCount.value = '';
+    }
+
+    function showTimeInput() {
+      elements.timeInput.classList.remove('hidden');
+      elements.questionInput.classList.add('hidden');
+    }
+
+    function showQuestionInput() {
+      elements.questionInput.classList.remove('hidden');
+      elements.timeInput.classList.add('hidden');
+    }
+
+    function selectMode(mode) {
+      playerName = elements.nameInput.value.trim();
+      if (!playerName) {
+        alert("Please enter your name");
+        return;
+      }
+      
+      currentMode = mode;
+      const payload = { name: playerName, mode };
+
+      if (mode === 'Rapid Fire') {
+        const timeLimit = parseInt(elements.timeLimit.value);
+        if (!timeLimit || timeLimit <= 0) {
+          alert('Please enter a valid time (minimum 1 second)');
+          return;
+        }
+        payload.time = timeLimit;
+      }
+
+      if (mode === 'Fast Finisher') {
+        totalQuestions = parseInt(elements.questionCount.value);
+        if (!totalQuestions || totalQuestions <= 0) {
+          alert('Please enter a valid number of questions (minimum 1)');
+          return;
+        }
+        payload.numQuestions = totalQuestions;
+        answeredQuestions = 0;
+      }
+
+      elements.modeScreen.style.display = 'none';
+      elements.gameScreen.style.display = 'flex';
+      elements.gameHeader.textContent = `Mode: ${mode}`;
+      elements.score.textContent = '0';
+      
+      if (mode === 'Champion') {
+        elements.leaderboardContainer.style.display = 'block';
+      } else {
+        elements.leaderboardContainer.style.display = 'none';
+      }
+
+      socket.emit('selectMode', payload);
+    }
+
+    // Socket Event Handlers
+    socket.on('newQuestion', (data) => {
+      elements.questionText.textContent = data.question;
+      elements.optionsContainer.innerHTML = '';
+      currentCorrectAnswer = data.answer;
+
+      data.options.forEach(option => {
+        const button = document.createElement('button');
+        button.textContent = option;
+        button.onclick = () => {
+          if (button.disabled) return;
+          Array.from(elements.optionsContainer.children).forEach(btn => {
+            btn.disabled = true;
+          });
+          socket.emit('submitAnswer', option);
+        };
+        elements.optionsContainer.appendChild(button);
+      });
+    });
+
+    socket.on('answerResult', ({ correct, correctAnswer, selectedAnswer }) => {
+      const buttons = elements.optionsContainer.children;
+      
+      Array.from(buttons).forEach(button => {
+        button.classList.remove('correct', 'incorrect', 'shake');
+        
+        if (button.textContent === selectedAnswer) {
+          button.classList.add(correct ? 'correct' : 'incorrect');
+          if (!correct) button.classList.add('shake');
+        }
+        
+        if (button.textContent === correctAnswer && !correct) {
+          button.classList.add('correct');
+        }
+      });
+    });
+
+    // Score update handler for ALL modes
+    socket.on('updateScore', (score) => {
+      elements.score.textContent = score;
+      console.log('Score updated:', score);
+    });
+
+    socket.on('updateLeaderboard', (leaderboards) => {
+      updateLeaderboardList('championPlayers', leaderboards.Champion);
+      updateLeaderboardList('rapidFirePlayers', leaderboards['Rapid Fire']);
+      updateLeaderboardList('fastFinisherPlayers', leaderboards['Fast Finisher']);
+    });
+
+    function updateLeaderboardList(elementId, players) {
+      const element = document.getElementById(elementId);
+      element.innerHTML = '';
+      
+      const sortedPlayers = Object.values(players).sort((a, b) => b.score - a.score);
+      
+      sortedPlayers.forEach(player => {
+        const li = document.createElement('li');
+        li.textContent = `${player.name}: ${player.score}`;
+        if (player.name === playerName) {
+          li.classList.add('highlight-player');
+        }
+        element.appendChild(li);
+      });
+    }
+
+    socket.on('endRapidFire', ({ finalScore }) => {
+      elements.gameScreen.style.display = 'none';
+      elements.resultScreen.style.display = 'flex';
+      elements.resultText.textContent = `⏰ Time's up! Your final score: ${finalScore}`;
+    });
+
+    socket.on('finishFastFinisher', ({ timeTaken, finalScore, totalQuestions }) => {
+      elements.gameScreen.style.display = 'none';
+      elements.resultScreen.style.display = 'flex';
+      elements.resultText.textContent = `✅ You answered ${totalQuestions} questions in ${timeTaken} seconds!\nFinal score: ${finalScore}`;
+    });
+
+    // Error handling
+    socket.on('connect_error', (err) => {
+      console.error('Connection error:', err);
+    });
+  </script>
+</body>
+</html>
