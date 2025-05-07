@@ -1,0 +1,61 @@
+Project Title: Real-Time Math Quiz Game with Multiplayer Modes
+
+Overview:
+This project is a web-based, real-time multiplayer math quiz game built using Node.js, Express, and Socket.IO for the backend, and HTML, Tailwind CSS, and vanilla JavaScript for the frontend. The game offers three engaging modes: Champion, Rapid Fire, and Fast Finisher, each designed to challenge players in unique ways. It includes real-time leaderboards, score updates, and visually dynamic UI transitions.
+
+Key Features:
+
+Three Game Modes:
+
+Champion: Continuous gameplay for multiple players with synchronized questions.
+
+Rapid Fire: Timed gameplay where players answer as many questions as possible.
+
+Fast Finisher: Players aim to answer a fixed number of questions quickly.
+
+Real-Time Communication:
+
+Socket.IO facilitates seamless real-time updates for questions, answers, scores, and leaderboards.
+
+Dynamic UI:
+
+Tailwind CSS and JavaScript power a responsive and interactive interface, with screens for login, mode selection, gameplay, and results.
+
+Live Leaderboards:
+
+Tracks and displays top players in each game mode with instant updates and personal score highlighting.
+
+Game State Management:
+
+Server-side management of player data, scores, and game progress using in-memory state objects.
+
+Randomized Questions:
+
+Questions are loaded from a JSON file and served randomly to keep gameplay fresh and challenging.
+
+Technologies Used:
+
+Node.js, Express.js
+
+Socket.IO
+
+HTML, Tailwind CSS
+
+Vanilla JavaScript
+
+Impact & Use Cases:
+
+Encourages quick math skills and competitive learning.
+
+Can be extended for classroom quizzes, coding challenges, or live competitions.
+
+Future Enhancements:
+
+User authentication and persistent scores.
+
+Admin dashboard for adding/editing questions.
+
+Mobile responsiveness and animations.
+
+Project Outcome:
+The game successfully provides a fun, competitive, and educational platform for players to improve their math skills, with real-time interaction and a clean, engaging interface.
